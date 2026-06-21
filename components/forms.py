@@ -153,7 +153,7 @@ def wizard_progress(current_step: int, steps: list[str]) -> None:
             state = "active"
             circle_content = str(idx)
         else:
-            state = "pending"
+            state = ""
             circle_content = str(idx)
 
         parts.append(

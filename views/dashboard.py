@@ -64,7 +64,7 @@ def render_dashboard() -> None:
         glass_card(
             title="Quick Actions",
             content="""
-            <p style="color:#475569;font-size:0.9rem;margin-bottom:1rem;">
+            <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1rem;">
                 Start a new health assessment or review your previous reports.
             </p>
             """,
@@ -96,7 +96,7 @@ def render_dashboard() -> None:
                 content="""
                 <div style="text-align:center;padding:2rem 0;">
                     <div style="font-size:3rem;margin-bottom:0.8rem;">🔍</div>
-                    <p style="color:#94A3B8;font-size:0.95rem;">No assessments yet.<br>
+                    <p style="color:var(--text-muted);font-size:0.95rem;">No assessments yet.<br>
                     Start your first health assessment to see results here.</p>
                 </div>
                 """,
@@ -118,7 +118,7 @@ def render_dashboard() -> None:
         glass_card(
             title="💡 Health Tip",
             content="""
-            <p style="color:#475569;font-size:0.88rem;line-height:1.6;">
+            <p style="color:var(--text-secondary);font-size:0.88rem;line-height:1.6;">
                 Regular health check-ups help catch potential issues early.
                 Even if you feel fine, periodic assessments create a valuable
                 health baseline for future reference.
@@ -149,9 +149,9 @@ def _build_recent_activity_html(reports: list[dict[str, Any]]) -> str:
         icon = sev_icons.get(severity, "🟡")
 
         items.append(f"""
-        <div style="padding:0.8rem 0;border-bottom:1px solid #E2E8F0;">
+        <div style="padding:0.8rem 0;border-bottom:1px solid rgba(22,163,74,0.1);">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
-                <span style="font-size:0.82rem;color:#94A3B8;">{date}</span>
+                <span style="font-size:0.82rem;color:var(--text-muted);">{date}</span>
                 <span style="font-size:0.75rem;font-weight:600;color:{color};
                     background:rgba({_hex_to_rgb(color)},0.1);padding:0.15rem 0.6rem;
                     border-radius:999px;">{icon} {severity}</span>

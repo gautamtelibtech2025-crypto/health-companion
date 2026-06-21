@@ -36,40 +36,40 @@ def get_gemini_api_key() -> str | None:
     return os.environ.get("GEMINI_API_KEY")
 
 # ─── Color Palette ────────────────────────────────────────────────────────────
-# Inspired by medical / healthcare branding — clean blues, teals, slates.
+# Light Green Skeuomorphism
 
 class Colors:
     """Design-token color constants used across UI components."""
 
     # Primary
-    PRIMARY: Final[str] = "#0EA5E9"       # Sky-500
-    PRIMARY_LIGHT: Final[str] = "#38BDF8" # Sky-400
-    PRIMARY_DARK: Final[str] = "#0284C7"  # Sky-600
+    PRIMARY: Final[str] = "#16A34A"       # Green-600
+    PRIMARY_LIGHT: Final[str] = "#22C55E" # Green-500
+    PRIMARY_DARK: Final[str] = "#15803D"  # Green-700
 
     # Accent
-    ACCENT: Final[str] = "#8B5CF6"        # Violet-500
-    ACCENT_LIGHT: Final[str] = "#A78BFA"  # Violet-400
+    ACCENT: Final[str] = "#16A34A"
+    ACCENT_LIGHT: Final[str] = "#4ADE80"
 
     # Semantic
-    SUCCESS: Final[str] = "#22C55E"       # Green-500
-    WARNING: Final[str] = "#F59E0B"       # Amber-500
-    DANGER: Final[str] = "#EF4444"        # Red-500
-    INFO: Final[str] = "#3B82F6"          # Blue-500
+    SUCCESS: Final[str] = "#22C55E"
+    WARNING: Final[str] = "#EAB308"
+    DANGER: Final[str] = "#DC2626"
+    INFO: Final[str] = "#2563EB"
 
-    # Neutrals (Slate palette)
-    BG_PRIMARY: Final[str] = "#F8FAFC"    # Slate-50
-    BG_SECONDARY: Final[str] = "#F1F5F9"  # Slate-100
-    BG_CARD: Final[str] = "rgba(255, 255, 255, 0.72)"
-    BORDER: Final[str] = "#E2E8F0"        # Slate-200
-    TEXT_PRIMARY: Final[str] = "#0F172A"   # Slate-900
-    TEXT_SECONDARY: Final[str] = "#475569" # Slate-500
-    TEXT_MUTED: Final[str] = "#94A3B8"     # Slate-400
+    # Neutrals (Light green-tinted)
+    BG_PRIMARY: Final[str] = "#E8EFE8"
+    BG_SECONDARY: Final[str] = "#F2F7F2"
+    BG_CARD: Final[str] = "rgba(242, 247, 242, 0.50)"
+    BORDER: Final[str] = "rgba(22, 163, 74, 0.12)"
+    TEXT_PRIMARY: Final[str] = "#1A2E1A"
+    TEXT_SECONDARY: Final[str] = "#3D5A3D"
+    TEXT_MUTED: Final[str] = "#6B8A6B"
 
     # Gradients
-    GRADIENT_PRIMARY: Final[str] = "linear-gradient(135deg, #0EA5E9 0%, #8B5CF6 100%)"
+    GRADIENT_PRIMARY: Final[str] = "linear-gradient(135deg, #16A34A 0%, #2563EB 100%)"
     GRADIENT_SUCCESS: Final[str] = "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)"
     GRADIENT_DANGER: Final[str] = "linear-gradient(135deg, #EF4444 0%, #DC2626 100%)"
-    GRADIENT_WARM: Final[str] = "linear-gradient(135deg, #F59E0B 0%, #EF4444 100%)"
+    GRADIENT_WARM: Final[str] = "linear-gradient(135deg, #EAB308 0%, #DC2626 100%)"
 
 # ─── Severity Levels ─────────────────────────────────────────────────────────
 

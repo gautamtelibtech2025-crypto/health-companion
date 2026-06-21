@@ -103,7 +103,7 @@ def _step_personal_info(data: dict) -> None:
     """Step 1: Personal information."""
     glass_card(
         title="👤 Personal Information",
-        content="<p style='color:#475569;font-size:0.88rem;'>Tell us about yourself.</p>",
+        content="<p style='color:var(--text-secondary);font-size:0.88rem;'>Tell us about yourself.</p>",
         animation_index=1,
     )
 
@@ -154,8 +154,8 @@ def _step_personal_info(data: dict) -> None:
         category, color = _bmi_category(bmi)
         st.markdown(
             f"""
-            <div class="neu-card animate-in animate-in-2" style="text-align:center;padding:1rem;">
-                <span style="font-size:0.82rem;color:#94A3B8;text-transform:uppercase;letter-spacing:0.05em;">
+            <div class="medical-input-sunken animate-in animate-in-2" style="text-align:center;padding:1rem;">
+                <span style="font-size:0.82rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">
                     Body Mass Index
                 </span>
                 <div style="font-size:2rem;font-weight:800;color:{color};margin:0.3rem 0;">
@@ -172,7 +172,7 @@ def _step_symptoms(data: dict) -> None:
     """Step 2: Symptom selection."""
     glass_card(
         title="🤒 Symptoms",
-        content="<p style='color:#475569;font-size:0.88rem;'>Select your current symptoms.</p>",
+        content="<p style='color:var(--text-secondary);font-size:0.88rem;'>Select your current symptoms.</p>",
         animation_index=1,
     )
 
@@ -197,7 +197,7 @@ def _step_duration(data: dict) -> None:
     """Step 3: Duration and severity."""
     glass_card(
         title="⏱️ Duration & Severity",
-        content="<p style='color:#475569;font-size:0.88rem;'>How long have you had these symptoms and how severe are they?</p>",
+        content="<p style='color:var(--text-secondary);font-size:0.88rem;'>How long have you had these symptoms and how severe are they?</p>",
         animation_index=1,
     )
 
@@ -248,7 +248,7 @@ def _step_medical_history(data: dict) -> None:
     """Step 4: Medical history."""
     glass_card(
         title="📋 Medical History",
-        content="<p style='color:#475569;font-size:0.88rem;'>Help us understand your medical background.</p>",
+        content="<p style='color:var(--text-secondary);font-size:0.88rem;'>Help us understand your medical background.</p>",
         animation_index=1,
     )
 
@@ -288,7 +288,7 @@ def _step_review(data: dict) -> None:
     """Step 5: Review all collected data before submitting."""
     glass_card(
         title="✅ Review Your Information",
-        content="<p style='color:#475569;font-size:0.88rem;'>Please review the information below before submitting for AI analysis.</p>",
+        content="<p style='color:var(--text-secondary);font-size:0.88rem;'>Please review the information below before submitting for AI analysis.</p>",
         animation_index=1,
     )
 
@@ -299,9 +299,9 @@ def _step_review(data: dict) -> None:
 
     st.markdown(
         f"""
-        <div class="neu-card">
-            <h4 style="margin:0 0 0.6rem 0;color:#0284C7;">👤 Personal Info</h4>
-            <table style="width:100%;font-size:0.88rem;color:#475569;">
+        <div class="medical-input-sunken">
+            <h4 style="margin:0 0 0.6rem 0;color:var(--accent);">👤 Personal Info</h4>
+            <table style="width:100%;font-size:0.88rem;color:var(--text-secondary);">
                 <tr><td style="padding:0.3rem 0;font-weight:600;width:40%;">Age</td>
                     <td>{data.get('age', 'N/A')}</td></tr>
                 <tr><td style="padding:0.3rem 0;font-weight:600;">Gender</td>
@@ -326,10 +326,10 @@ def _step_review(data: dict) -> None:
 
     st.markdown(
         f"""
-        <div class="neu-card">
-            <h4 style="margin:0 0 0.6rem 0;color:#0284C7;">🤒 Symptoms</h4>
-            <p style="font-size:0.88rem;color:#475569;margin:0;">{all_symptoms}</p>
-            <p style="font-size:0.88rem;color:#475569;margin:0.3rem 0 0 0;">
+        <div class="medical-input-sunken">
+            <h4 style="margin:0 0 0.6rem 0;color:var(--accent);">🤒 Symptoms</h4>
+            <p style="font-size:0.88rem;color:var(--text-secondary);margin:0;">{all_symptoms}</p>
+            <p style="font-size:0.88rem;color:var(--text-secondary);margin:0.3rem 0 0 0;">
                 <strong>Duration:</strong> {data.get('duration', 'N/A')} &nbsp;|&nbsp;
                 <strong>Pain Level:</strong> {data.get('pain_level', 'N/A')}/10
             </p>
@@ -343,9 +343,9 @@ def _step_review(data: dict) -> None:
 
     st.markdown(
         f"""
-        <div class="neu-card">
-            <h4 style="margin:0 0 0.6rem 0;color:#0284C7;">📋 Medical History</h4>
-            <p style="font-size:0.88rem;color:#475569;margin:0;">
+        <div class="medical-input-sunken">
+            <h4 style="margin:0 0 0.6rem 0;color:var(--accent);">📋 Medical History</h4>
+            <p style="font-size:0.88rem;color:var(--text-secondary);margin:0;">
                 <strong>Conditions:</strong> {conditions}<br>
                 <strong>Medications:</strong> {meds}<br>
                 <strong>Allergies:</strong> {data.get('allergies', 'None') or 'None'}

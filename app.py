@@ -52,25 +52,25 @@ current_page = render_sidebar()
 
 # ─── Page Router ──────────────────────────────────────────────────────────────
 if current_page == "dashboard":
-    from pages.dashboard import render_dashboard
+    from views.dashboard import render_dashboard
     render_dashboard()
 
 elif current_page == "assessment":
-    from pages.assessment import render_assessment
+    from views.assessment import render_assessment
     render_assessment()
 
 elif current_page == "analysis":
-    from pages.analysis import render_analysis
+    from views.analysis import render_analysis
     render_analysis()
 
 elif current_page == "reports":
-    from pages.reports import render_reports
+    from views.reports import render_reports
     render_reports()
 
 elif current_page == "settings":
-    from pages.settings_page import render_settings
+    from views.settings_page import render_settings
     render_settings()
 
 else:
-    from pages.dashboard import render_dashboard
+    from views.dashboard import render_dashboard
     render_dashboard()

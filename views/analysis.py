@@ -45,7 +45,7 @@ def render_analysis() -> None:
             content="""
             <div style="text-align:center;padding:2rem 0;">
                 <div style="font-size:3rem;margin-bottom:0.8rem;">🧠</div>
-                <p style="color:#94A3B8;font-size:0.95rem;">
+                <p style="color:var(--text-muted);font-size:0.95rem;">
                     Complete a health assessment first to see AI analysis results here.
                 </p>
             </div>
@@ -86,7 +86,7 @@ def render_analysis() -> None:
             title="Summary",
             content=f"""
             <div style="margin-bottom:0.6rem;">{badge_html}</div>
-            <p style="color:#475569;font-size:0.9rem;line-height:1.6;">{summary}</p>
+            <p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.6;">{summary}</p>
             """,
             animation_index=1,
         )
@@ -96,7 +96,7 @@ def render_analysis() -> None:
     if gen_info:
         glass_card(
             title="📖 General Information",
-            content=f'<p style="color:#475569;font-size:0.9rem;line-height:1.7;">{gen_info}</p>',
+            content=f'<p style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">{gen_info}</p>',
             animation_index=2,
         )
 
@@ -114,14 +114,14 @@ def render_analysis() -> None:
 
             st.markdown(
                 f"""
-                <div class="neu-card animate-in animate-in-{min(i+1, 4)}">
+                <div class="medical-input-sunken animate-in animate-in-{min(i+1, 4)}">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-                        <h4 style="margin:0;font-size:1rem;color:#0F172A;">{name}</h4>
+                        <h4 style="margin:0;font-size:1rem;color:var(--text-primary);">{name}</h4>
                         <span style="font-size:0.75rem;font-weight:600;color:{lk_color};
                             background:rgba({_hex_to_rgb(lk_color)},0.1);padding:0.15rem 0.6rem;
                             border-radius:999px;">Likelihood: {likelihood}</span>
                     </div>
-                    <p style="margin:0;font-size:0.88rem;color:#475569;line-height:1.5;">{desc}</p>
+                    <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">{desc}</p>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -157,9 +157,9 @@ def render_analysis() -> None:
         warning_items = "".join(f'<li style="margin-bottom:0.3rem;">{w}</li>' for w in warnings)
         st.markdown(
             f"""
-            <div class="glass-card animate-in" style="border-left:4px solid #EF4444;background:rgba(239,68,68,0.04);">
+            <div class="diagnostic-card-glass animate-in" style="border-left:4px solid #EF4444;background:rgba(239,68,68,0.04);">
                 <h4 style="margin:0 0 0.5rem 0;color:#EF4444;">⚠️ Warning Signs</h4>
-                <ul style="margin:0;padding-left:1.2rem;color:#475569;font-size:0.9rem;line-height:1.7;">
+                <ul style="margin:0;padding-left:1.2rem;color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">
                     {warning_items}
                 </ul>
             </div>
@@ -173,9 +173,9 @@ def render_analysis() -> None:
         doc_html = "".join(f'<li style="margin-bottom:0.3rem;">{d}</li>' for d in doctor_items)
         st.markdown(
             f"""
-            <div class="glass-card animate-in" style="border-left:4px solid #3B82F6;background:rgba(59,130,246,0.04);">
+            <div class="diagnostic-card-glass animate-in" style="border-left:4px solid #3B82F6;background:rgba(59,130,246,0.04);">
                 <h4 style="margin:0 0 0.5rem 0;color:#3B82F6;">🩺 When to Consult a Doctor</h4>
-                <ul style="margin:0;padding-left:1.2rem;color:#475569;font-size:0.9rem;line-height:1.7;">
+                <ul style="margin:0;padding-left:1.2rem;color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">
                     {doc_html}
                 </ul>
             </div>
@@ -189,7 +189,7 @@ def render_analysis() -> None:
         life_html = "".join(f'<li style="margin-bottom:0.3rem;">{l}</li>' for l in lifestyle)
         glass_card(
             title="🌿 Lifestyle Recommendations",
-            content=f'<ul style="margin:0;padding-left:1.2rem;color:#475569;font-size:0.9rem;line-height:1.7;">{life_html}</ul>',
+            content=f'<ul style="margin:0;padding-left:1.2rem;color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">{life_html}</ul>',
             animation_index=3,
         )
 
@@ -199,7 +199,7 @@ def render_analysis() -> None:
         actions_html = "".join(f'<li style="margin-bottom:0.3rem;">{a}</li>' for a in actions)
         glass_card(
             title="✅ Recommended Actions",
-            content=f'<ul style="margin:0;padding-left:1.2rem;color:#475569;font-size:0.9rem;line-height:1.7;">{actions_html}</ul>',
+            content=f'<ul style="margin:0;padding-left:1.2rem;color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">{actions_html}</ul>',
             animation_index=4,
         )
 
@@ -250,10 +250,10 @@ def _run_analysis() -> None:
     with st.spinner(""):
         st.markdown(
             """
-            <div class="glass-card" style="text-align:center;padding:3rem;">
+            <div class="diagnostic-card-glass" style="text-align:center;padding:3rem;">
                 <div style="font-size:3rem;margin-bottom:1rem;" class="pulse-glow">🧠</div>
-                <h3 style="margin:0 0 0.5rem 0;color:#0F172A;">Analyzing Your Health Data</h3>
-                <p style="color:#94A3B8;font-size:0.9rem;">
+                <h3 style="margin:0 0 0.5rem 0;color:var(--text-primary);">Analyzing Your Health Data</h3>
+                <p style="color:var(--text-muted);font-size:0.9rem;">
                     Our AI is reviewing your symptoms and medical history...<br>
                     This usually takes 10–20 seconds.
                 </p>

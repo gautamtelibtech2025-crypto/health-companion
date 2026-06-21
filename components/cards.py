@@ -1,11 +1,12 @@
 """
 HealthAI Pro — Card Components
 
-Glassmorphism and neumorphic card wrappers for content display.
+Glassmorphic and Sunken card wrappers for content display.
 """
 
 from __future__ import annotations
 
+import textwrap
 import streamlit as st
 
 
@@ -14,56 +15,58 @@ def glass_card(
     title: str | None = None,
     animation_index: int = 0,
 ) -> None:
-    """Render a frosted-glass card with optional title.
-
-    Args:
-        content: Inner HTML/markdown content.
-        title: Optional card title rendered as <h3>.
-        animation_index: Staggered animation delay index (0–4).
-    """
+    """Render a frosted glass diagnostic card with optional title."""
     anim_class = f"animate-in animate-in-{animation_index}" if animation_index else "animate-in"
-    title_html = f'<h3 style="margin:0 0 0.75rem 0;font-size:1.05rem;font-weight:600;">{title}</h3>' if title else ""
-    st.markdown(
-        f"""
-        <div class="glass-card {anim_class}">
-            {title_html}
-            {content}
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    header_html = ""
+    if title:
+        header_html = f'<div class="card-header" style="margin-bottom: 1rem;"><h3 class="metric-title" style="margin:0;font-size:1.15rem;font-weight:700;color:var(--text-primary);">{title}</h3></div>'
+        
+    content_clean = textwrap.dedent(content).strip()
+    full_html = f'<div class="diagnostic-card-glass {anim_class}">\n{header_html}\n{content_clean}\n</div>'
+    
+    st.markdown(full_html, unsafe_allow_html=True)
 
 
-def neu_card(
+def raised_card(
     content: str,
     title: str | None = None,
     animation_index: int = 0,
 ) -> None:
-    """Render a neumorphic card with soft shadows.
-
-    Args:
-        content: Inner HTML/markdown content.
-        title: Optional card title rendered as <h3>.
-        animation_index: Staggered animation delay index (0–4).
-    """
+    """Render a solid 3D raised surface."""
     anim_class = f"animate-in animate-in-{animation_index}" if animation_index else "animate-in"
-    title_html = f'<h3 style="margin:0 0 0.75rem 0;font-size:1.05rem;font-weight:600;">{title}</h3>' if title else ""
-    st.markdown(
-        f"""
-        <div class="neu-card {anim_class}">
-            {title_html}
-            {content}
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    title_html = f'<h3 style="margin:0 0 0.75rem 0;font-size:1.1rem;font-weight:600;color:var(--text-primary);">{title}</h3>' if title else ""
+    
+    content_clean = textwrap.dedent(content).strip()
+    full_html = f'<div class="metric-card {anim_class}" style="text-align:left; margin-bottom:1.4rem;">\n{title_html}\n{content_clean}\n</div>'
+    
+    st.markdown(full_html, unsafe_allow_html=True)
+
+
+def sunken_card(
+    content: str,
+    title: str | None = None,
+    animation_index: int = 0,
+) -> None:
+    """Render an inverted 3D carved surface (sunken panel)."""
+    anim_class = f"animate-in animate-in-{animation_index}" if animation_index else "animate-in"
+    title_html = f'<h3 style="margin:0 0 0.75rem 0;font-size:1.1rem;font-weight:600;color:var(--text-primary);">{title}</h3>' if title else ""
+    
+    content_clean = textwrap.dedent(content).strip()
+    full_html = f'<div class="medical-input-sunken {anim_class}">\n{title_html}\n{content_clean}\n</div>'
+    
+    st.markdown(full_html, unsafe_allow_html=True)
+
+# Aliases for backward compatibility during refactor
+neu_card = sunken_card
+modern_card = raised_card
+glass_card = raised_card  # Replace glass with solid 3D per user request
 
 
 def info_card(
     icon: str,
     title: str,
     value: str,
-    color: str = "#0EA5E9",
+    color: str = "var(--accent-medical)",
     animation_index: int = 0,
 ) -> None:
     """Render a compact information card with an icon and single value.
@@ -72,18 +75,16 @@ def info_card(
         icon: Emoji or icon string.
         title: Card label/title.
         value: Main display value.
-        color: Accent color for the top border.
+        color: Accent color (unused in new design but kept for signature).
         animation_index: Staggered animation delay index.
     """
     anim_class = f"animate-in animate-in-{animation_index}" if animation_index else "animate-in"
     st.markdown(
         f"""
-        <div class="glass-card {anim_class}" style="text-align:center;padding:1.4rem 1rem;
-            border-top:3px solid {color};">
-            <div style="font-size:2rem;margin-bottom:0.4rem;">{icon}</div>
-            <div style="font-size:1.5rem;font-weight:800;color:{color};letter-spacing:-0.02em;">{value}</div>
-            <div style="font-size:0.8rem;color:#94A3B8;font-weight:500;text-transform:uppercase;
-                letter-spacing:0.05em;margin-top:0.2rem;">{title}</div>
+        <div class="metric-card {anim_class}">
+            <div class="metric-icon">{icon}</div>
+            <div class="metric-value">{value}</div>
+            <div class="metric-label">{title}</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -110,3 +111,4 @@ def status_badge(text: str, severity: str = "Low") -> str:
     icon = {"Low": "🟢", "Moderate": "🟡", "High": "🔴", "Critical": "🚨"}.get(severity, "🟢")
 
     return f'<span class="severity-badge {css_class}">{icon} {text}</span>'
+
