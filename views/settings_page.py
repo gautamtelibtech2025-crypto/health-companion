@@ -14,7 +14,6 @@ from config.settings import (
     APP_DESCRIPTION,
     APP_NAME,
     APP_VERSION,
-    ENV_FILE,
     GEMINI_MODEL,
     get_gemini_api_key,
 )
@@ -36,9 +35,10 @@ def render_settings() -> None:
         title="🔑 Gemini API Configuration",
         content="""
         <p style="color:#475569;font-size:0.88rem;line-height:1.6;">
-            Enter your Google Gemini API key to enable AI analysis.
-            The key can be saved locally in <code>.env</code> so you do not need to re-enter it each time.
-            You can also set the <code>GEMINI_API_KEY</code> environment variable.
+            API key is loaded automatically from local <code>.env</code>.
+            Add this line in your project root file:
+            <code>GEMINI_API_KEY=your_key_here</code>
+            and restart the app.
         </p>
         """,
         animation_index=1,
@@ -59,17 +59,6 @@ def render_settings() -> None:
         )
         if not GeminiService.is_configured():
             GeminiService.configure(env_key)
-
-    # Manual input
-    current_key = st.session_state.get("manual_api_key", "")
-    api_key = st.text_input(
-        "Gemini API Key",
-        value=current_key,
-        type="password",
-        placeholder="Enter your API key here...",
-        key="api_key_input",
-        help="Get your API key from https://aistudio.google.com/apikey",
-    )
 
     # Model Selection Dropdown
     model_options = [
@@ -94,35 +83,19 @@ def render_settings() -> None:
         st.session_state["selected_model"] = selected_model
         st.rerun()
 
-    col1, col2 = st.columns(2)
+    if st.button("🔌  Test Connection", key="test_conn", use_container_width=True):
+        if not GeminiService.is_configured() and env_key:
+            GeminiService.configure(env_key)
 
-    with col1:
-        if st.button("💾  Save API Key", key="save_key", use_container_width=True, type="primary"):
-            if api_key.strip():
-                st.session_state["manual_api_key"] = api_key.strip()
-                GeminiService.configure(api_key.strip())
-                ENV_FILE.write_text(f"GEMINI_API_KEY={api_key.strip()}\n", encoding="utf-8")
-                st.success("✅ API key saved and configured!")
+        if GeminiService.is_configured():
+            with st.spinner("Testing connection..."):
+                success, message = GeminiService.test_connection()
+            if success:
+                st.success(message)
             else:
-                st.warning("Please enter a valid API key.")
-
-    with col2:
-        if st.button("🔌  Test Connection", key="test_conn", use_container_width=True):
-            # Configure first if key is available but not configured
-            if not GeminiService.is_configured():
-                key_to_use = api_key.strip() or env_key
-                if key_to_use:
-                    GeminiService.configure(key_to_use)
-
-            if GeminiService.is_configured():
-                with st.spinner("Testing connection..."):
-                    success, message = GeminiService.test_connection()
-                if success:
-                    st.success(message)
-                else:
-                    st.error(message)
-            else:
-                st.warning("No API key available. Enter a key or set the environment variable.")
+                st.error(message)
+        else:
+            st.warning("No API key found. Add GEMINI_API_KEY in your local .env file and restart the app.")
 
     # ── Connection Status ─────────────────────────────────────────
     status_color = "#22C55E" if GeminiService.is_configured() else "#EF4444"

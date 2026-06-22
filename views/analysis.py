@@ -297,10 +297,7 @@ def _run_analysis() -> None:
         return
 
     if not GeminiService.is_configured():
-        st.error("⚠️ Gemini API key not configured. Please go to **Settings** and add your API key.")
-        if st.button("⚙️  Go to Settings"):
-            st.session_state["current_page"] = "settings"
-            st.rerun()
+        st.error("Gemini API key not configured. Add GEMINI_API_KEY in local .env and restart the app.")
         return
 
     # Loading animation

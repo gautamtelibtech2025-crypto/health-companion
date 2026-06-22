@@ -31,7 +31,6 @@ _DEFAULTS: dict = {
     "assessment_data": {},
     "last_analysis": None,
     "run_analysis": False,
-    "manual_api_key": "",
     "confirm_delete_all": False,
 }
 
@@ -44,8 +43,6 @@ if not GeminiService.is_configured():
     env_key = get_gemini_api_key()
     if env_key:
         GeminiService.configure(env_key)
-    elif st.session_state.get("manual_api_key"):
-        GeminiService.configure(st.session_state["manual_api_key"])
 
 # ─── Sidebar Navigation ──────────────────────────────────────────────────────
 current_page = render_sidebar()
