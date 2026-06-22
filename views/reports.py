@@ -43,7 +43,7 @@ def render_reports() -> None:
             """,
             animation_index=1,
         )
-        if st.button("🩺  Start Assessment", key="reports_start"):
+        if st.button("🩺  Start Assessment", key="reports_start", type="primary"):
             st.session_state["current_page"] = "assessment"
             st.rerun()
         return
@@ -174,7 +174,7 @@ def _render_report_card(report: dict[str, Any], idx: int, store: ReportStore) ->
                          use_container_width=True)
 
         with btn_col2:
-            if st.button("🧠 View Full Analysis", key=f"view_{report_id}", use_container_width=True):
+            if st.button("🧠 View Full Analysis", key=f"view_{report_id}", use_container_width=True, type="primary"):
                 st.session_state["last_analysis"] = analysis
                 st.session_state["assessment_data"] = patient
                 st.session_state["current_page"] = "analysis"

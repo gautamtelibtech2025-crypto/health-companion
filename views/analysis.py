@@ -10,6 +10,7 @@ import time
 from typing import Any
 
 import streamlit as st
+import textwrap
 
 from components.header import page_header
 from components.cards import glass_card, neu_card, status_badge
@@ -53,7 +54,7 @@ def render_analysis() -> None:
             animation_index=1,
         )
 
-        if st.button("🩺  Start Assessment", key="analysis_start"):
+        if st.button("🩺  Start Assessment", key="analysis_start", type="primary"):
             st.session_state["current_page"] = "assessment"
             st.rerun()
         return
@@ -113,19 +114,71 @@ def render_analysis() -> None:
             lk_color = lk_colors.get(likelihood, "#94A3B8")
 
             st.markdown(
-                f"""
-                <div class="medical-input-sunken animate-in animate-in-{min(i+1, 4)}">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-                        <h4 style="margin:0;font-size:1rem;color:var(--text-primary);">{name}</h4>
-                        <span style="font-size:0.75rem;font-weight:600;color:{lk_color};
-                            background:rgba({_hex_to_rgb(lk_color)},0.1);padding:0.15rem 0.6rem;
-                            border-radius:999px;">Likelihood: {likelihood}</span>
+                textwrap.dedent(
+                    f"""
+                    <div class="medical-input-sunken animate-in animate-in-{min(i+1, 4)}">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+                            <h4 style="margin:0;font-size:1rem;color:var(--text-primary);">{name}</h4>
+                            <span style="font-size:0.75rem;font-weight:600;color:{lk_color};
+                                background:rgba({_hex_to_rgb(lk_color)},0.1);padding:0.15rem 0.6rem;
+                                border-radius:999px;">Likelihood: {likelihood}</span>
+                        </div>
+                        <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">{desc}</p>
                     </div>
-                    <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">{desc}</p>
-                </div>
-                """,
+                    """
+                ),
                 unsafe_allow_html=True,
             )
+
+    # ── Prescription Advisory ─────────────────────────────────────
+    prescription = analysis.get("prescription")
+    if prescription:
+        st.markdown("### 🩺 Advisory Prescription Mockup")
+        notes = prescription.get("doctor_notes", "")
+        meds = prescription.get("medications", [])
+        
+        med_rows = ""
+        for m in meds:
+            med_rows += f"""
+            <tr style="border-bottom: 1px solid rgba(22, 163, 74, 0.08);">
+                <td style="padding: 0.6rem 0.5rem; font-weight: 600; color: var(--text-primary);">{m.get('name', '')}</td>
+                <td style="padding: 0.6rem 0.5rem; color: var(--text-secondary);">{m.get('dosage', '')}</td>
+                <td style="padding: 0.6rem 0.5rem; color: var(--text-secondary);">{m.get('frequency', '')}</td>
+                <td style="padding: 0.6rem 0.5rem; color: var(--text-secondary);">{m.get('duration', '')}</td>
+                <td style="padding: 0.6rem 0.5rem; color: var(--text-muted); font-size: 0.85rem;">{m.get('instructions', '')}</td>
+            </tr>
+            """
+            
+        med_table = f"""
+        <table style="width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem;">
+            <thead>
+                <tr style="background: rgba(22, 163, 74, 0.04); border-bottom: 2px solid rgba(22, 163, 74, 0.12); text-align: left;">
+                    <th style="padding: 0.6rem 0.5rem; color: var(--text-primary); font-weight: 700;">Medicine Name</th>
+                    <th style="padding: 0.6rem 0.5rem; color: var(--text-primary); font-weight: 700;">Dosage</th>
+                    <th style="padding: 0.6rem 0.5rem; color: var(--text-primary); font-weight: 700;">Frequency</th>
+                    <th style="padding: 0.6rem 0.5rem; color: var(--text-primary); font-weight: 700;">Duration</th>
+                    <th style="padding: 0.6rem 0.5rem; color: var(--text-primary); font-weight: 700;">Instructions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {med_rows}
+            </tbody>
+        </table>
+        """
+        
+        glass_card(
+            title="Prescription Details (AI-Generated Advisory)",
+            content=f"""
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.8rem;">
+                <strong>Doctor Notes:</strong> {notes}
+            </p>
+            {med_table}
+            <p style="color: var(--danger); font-size: 0.8rem; margin-top: 1rem; font-weight: 600; text-align: center;">
+                ⚠️ WARNING: This prescription mockup is AI-generated for informational purposes only. Consult a licensed doctor before taking any medications.
+            </p>
+            """,
+            animation_index=2,
+        )
 
     # ── Treatments ────────────────────────────────────────────────
     treatments = analysis.get("commonly_used_treatments", [])
@@ -156,14 +209,16 @@ def render_analysis() -> None:
     if warnings:
         warning_items = "".join(f'<li style="margin-bottom:0.3rem;">{w}</li>' for w in warnings)
         st.markdown(
-            f"""
-            <div class="diagnostic-card-glass animate-in" style="border-left:4px solid #EF4444;background:rgba(239,68,68,0.04);">
-                <h4 style="margin:0 0 0.5rem 0;color:#EF4444;">⚠️ Warning Signs</h4>
-                <ul style="margin:0;padding-left:1.2rem;color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">
-                    {warning_items}
-                </ul>
-            </div>
-            """,
+            textwrap.dedent(
+                f"""
+                <div class="diagnostic-card-glass animate-in" style="border-left:4px solid #EF4444;background:rgba(239,68,68,0.04);">
+                    <h4 style="margin:0 0 0.5rem 0;color:#EF4444;">⚠️ Warning Signs</h4>
+                    <ul style="margin:0;padding-left:1.2rem;color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">
+                        {warning_items}
+                    </ul>
+                </div>
+                """
+            ),
             unsafe_allow_html=True,
         )
 
@@ -172,14 +227,16 @@ def render_analysis() -> None:
     if doctor_items:
         doc_html = "".join(f'<li style="margin-bottom:0.3rem;">{d}</li>' for d in doctor_items)
         st.markdown(
-            f"""
-            <div class="diagnostic-card-glass animate-in" style="border-left:4px solid #3B82F6;background:rgba(59,130,246,0.04);">
-                <h4 style="margin:0 0 0.5rem 0;color:#3B82F6;">🩺 When to Consult a Doctor</h4>
-                <ul style="margin:0;padding-left:1.2rem;color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">
-                    {doc_html}
-                </ul>
-            </div>
-            """,
+            textwrap.dedent(
+                f"""
+                <div class="diagnostic-card-glass animate-in" style="border-left:4px solid #3B82F6;background:rgba(59,130,246,0.04);">
+                    <h4 style="margin:0 0 0.5rem 0;color:#3B82F6;">🩺 When to Consult a Doctor</h4>
+                    <ul style="margin:0;padding-left:1.2rem;color:var(--text-secondary);font-size:0.9rem;line-height:1.7;">
+                        {doc_html}
+                    </ul>
+                </div>
+                """
+            ),
             unsafe_allow_html=True,
         )
 
@@ -208,7 +265,7 @@ def render_analysis() -> None:
     btn_col1, btn_col2, btn_col3 = st.columns(3)
 
     with btn_col1:
-        if st.button("📄  Generate PDF Report", key="gen_pdf", use_container_width=True):
+        if st.button("📄  Generate PDF Report", key="gen_pdf", use_container_width=True, type="primary"):
             _generate_and_save_pdf(patient_data, analysis)
 
     with btn_col2:
@@ -249,16 +306,18 @@ def _run_analysis() -> None:
     # Loading animation
     with st.spinner(""):
         st.markdown(
-            """
-            <div class="diagnostic-card-glass" style="text-align:center;padding:3rem;">
-                <div style="font-size:3rem;margin-bottom:1rem;" class="pulse-glow">🧠</div>
-                <h3 style="margin:0 0 0.5rem 0;color:var(--text-primary);">Analyzing Your Health Data</h3>
-                <p style="color:var(--text-muted);font-size:0.9rem;">
-                    Our AI is reviewing your symptoms and medical history...<br>
-                    This usually takes 10–20 seconds.
-                </p>
-            </div>
-            """,
+            textwrap.dedent(
+                """
+                <div class="diagnostic-card-glass" style="text-align:center;padding:3rem;">
+                    <div style="font-size:3rem;margin-bottom:1rem;" class="pulse-glow">🧠</div>
+                    <h3 style="margin:0 0 0.5rem 0;color:var(--text-primary);">Analyzing Your Health Data</h3>
+                    <p style="color:var(--text-muted);font-size:0.9rem;">
+                        Our AI is reviewing your symptoms and medical history...<br>
+                        This usually takes 10–20 seconds.
+                    </p>
+                </div>
+                """
+            ),
             unsafe_allow_html=True,
         )
 

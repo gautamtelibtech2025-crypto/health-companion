@@ -15,18 +15,39 @@ from typing import Final
 PROJECT_ROOT: Final[Path] = Path(__file__).resolve().parent.parent
 REPORTS_DIR: Final[Path] = PROJECT_ROOT / "reports"
 ASSETS_DIR: Final[Path] = PROJECT_ROOT / "assets"
+ENV_FILE: Final[Path] = PROJECT_ROOT / ".env"
 
 # Ensure critical directories exist at import time
 REPORTS_DIR.mkdir(exist_ok=True)
 
+
+def _load_local_env_file() -> None:
+    """Load simple KEY=VALUE pairs from the project .env file if it exists."""
+    if not ENV_FILE.exists():
+        return
+
+    for raw_line in ENV_FILE.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+_load_local_env_file()
+
 # ─── Application Metadata ────────────────────────────────────────────────────
-APP_NAME: Final[str] = "HealthAI Pro"
+APP_NAME: Final[str] = "Health Companion"
 APP_VERSION: Final[str] = "1.0.0"
 APP_DESCRIPTION: Final[str] = (
-    "AI-Powered Health Assessment Assistant — "
-    "Get preliminary health insights powered by Google Gemini."
+    "Health assessment and report assistant — "
+    "Get structured health insights when you need a quick check-in."
 )
-APP_ICON: Final[str] = "🏥"
+APP_ICON: Final[str] = "◼"
 
 # ─── Gemini Configuration ────────────────────────────────────────────────────
 GEMINI_MODEL: Final[str] = "gemini-2.5-flash"
@@ -42,13 +63,13 @@ class Colors:
     """Design-token color constants used across UI components."""
 
     # Primary
-    PRIMARY: Final[str] = "#16A34A"       # Green-600
-    PRIMARY_LIGHT: Final[str] = "#22C55E" # Green-500
-    PRIMARY_DARK: Final[str] = "#15803D"  # Green-700
+    PRIMARY: Final[str] = "#23436A"
+    PRIMARY_LIGHT: Final[str] = "#4E739B"
+    PRIMARY_DARK: Final[str] = "#172A45"
 
     # Accent
-    ACCENT: Final[str] = "#16A34A"
-    ACCENT_LIGHT: Final[str] = "#4ADE80"
+    ACCENT: Final[str] = "#23436A"
+    ACCENT_LIGHT: Final[str] = "#4E739B"
 
     # Semantic
     SUCCESS: Final[str] = "#22C55E"
@@ -57,17 +78,17 @@ class Colors:
     INFO: Final[str] = "#2563EB"
 
     # Neutrals (Light green-tinted)
-    BG_PRIMARY: Final[str] = "#E8EFE8"
-    BG_SECONDARY: Final[str] = "#F2F7F2"
-    BG_CARD: Final[str] = "rgba(242, 247, 242, 0.50)"
-    BORDER: Final[str] = "rgba(22, 163, 74, 0.12)"
-    TEXT_PRIMARY: Final[str] = "#1A2E1A"
-    TEXT_SECONDARY: Final[str] = "#3D5A3D"
-    TEXT_MUTED: Final[str] = "#6B8A6B"
+    BG_PRIMARY: Final[str] = "#F5F3EF"
+    BG_SECONDARY: Final[str] = "#FBFAF8"
+    BG_CARD: Final[str] = "rgba(255, 255, 255, 0.78)"
+    BORDER: Final[str] = "rgba(19, 31, 45, 0.10)"
+    TEXT_PRIMARY: Final[str] = "#17212E"
+    TEXT_SECONDARY: Final[str] = "#4B5563"
+    TEXT_MUTED: Final[str] = "#6B7280"
 
     # Gradients
-    GRADIENT_PRIMARY: Final[str] = "linear-gradient(135deg, #16A34A 0%, #2563EB 100%)"
-    GRADIENT_SUCCESS: Final[str] = "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)"
+    GRADIENT_PRIMARY: Final[str] = "linear-gradient(135deg, #23436A 0%, #4E739B 100%)"
+    GRADIENT_SUCCESS: Final[str] = "linear-gradient(135deg, #4E739B 0%, #23436A 100%)"
     GRADIENT_DANGER: Final[str] = "linear-gradient(135deg, #EF4444 0%, #DC2626 100%)"
     GRADIENT_WARM: Final[str] = "linear-gradient(135deg, #EAB308 0%, #DC2626 100%)"
 
@@ -172,7 +193,7 @@ DURATION_OPTIONS: Final[list[str]] = [
 # ─── Medical Disclaimer ──────────────────────────────────────────────────────
 
 DISCLAIMER: Final[str] = (
-    "⚕️ **Medical Disclaimer**: HealthAI Pro is an AI-powered informational tool "
+    "**Medical Disclaimer**: Health Companion is an informational tool "
     "and does **NOT** provide medical diagnoses or treatment recommendations. "
     "The information generated should **never** replace professional medical advice, "
     "diagnosis, or treatment. Always consult a qualified healthcare provider for "
@@ -182,9 +203,9 @@ DISCLAIMER: Final[str] = (
 # ─── Navigation ───────────────────────────────────────────────────────────────
 
 NAV_ITEMS: Final[list[dict[str, str]]] = [
-    {"key": "dashboard",   "label": "Dashboard",         "icon": "📊"},
-    {"key": "assessment",  "label": "Health Assessment",  "icon": "🩺"},
-    {"key": "analysis",    "label": "AI Analysis",        "icon": "🧠"},
-    {"key": "reports",     "label": "Previous Reports",   "icon": "📄"},
-    {"key": "settings",    "label": "Settings",           "icon": "⚙️"},
+    {"key": "dashboard",   "label": "Dashboard",         "icon": ""},
+    {"key": "assessment",  "label": "Health Assessment",  "icon": ""},
+    {"key": "analysis",    "label": "Analysis",           "icon": ""},
+    {"key": "reports",     "label": "Previous Reports",   "icon": ""},
+    {"key": "settings",    "label": "Settings",           "icon": ""},
 ]

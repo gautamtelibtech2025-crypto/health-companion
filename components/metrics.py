@@ -17,7 +17,7 @@ def metric_row(metrics: list[dict[str, str]]) -> None:
 
     Args:
         metrics: List of dicts with keys 'icon', 'value', 'label', 'accent'.
-                 'accent' is one of 'primary', 'accent', 'success', 'warning', 'danger'.
+                 The icon value is accepted for compatibility but not shown.
     """
     cols = st.columns(len(metrics))
     for idx, (col, m) in enumerate(zip(cols, metrics)):
@@ -27,7 +27,7 @@ def metric_row(metrics: list[dict[str, str]]) -> None:
             st.markdown(
                 f"""
                 <div class="metric-card mc-{accent} animate-in {anim}">
-                    <div class="metric-icon">{m['icon']}</div>
+                    <div class="metric-icon" aria-hidden="true">&nbsp;</div>
                     <div class="metric-value">{m['value']}</div>
                     <div class="metric-label">{m['label']}</div>
                 </div>

@@ -80,13 +80,15 @@ def info_card(
     """
     anim_class = f"animate-in animate-in-{animation_index}" if animation_index else "animate-in"
     st.markdown(
-        f"""
-        <div class="metric-card {anim_class}">
-            <div class="metric-icon">{icon}</div>
-            <div class="metric-value">{value}</div>
-            <div class="metric-label">{title}</div>
-        </div>
-        """,
+        textwrap.dedent(
+            f"""
+            <div class="metric-card {anim_class}">
+                <div class="metric-icon" aria-hidden="true">&nbsp;</div>
+                <div class="metric-value">{value}</div>
+                <div class="metric-label">{title}</div>
+            </div>
+            """
+        ),
         unsafe_allow_html=True,
     )
 

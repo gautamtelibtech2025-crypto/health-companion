@@ -25,7 +25,7 @@ def render_dashboard() -> None:
     page_header(
         title="Dashboard",
         subtitle="Welcome back — here's your health overview at a glance.",
-        icon="📊",
+        icon="",
     )
 
     store = ReportStore()
@@ -47,10 +47,10 @@ def render_dashboard() -> None:
                 severity_counts[sev] += 1
 
     metric_row([
-        {"icon": "📋", "value": str(total), "label": "Total Assessments", "accent": "primary"},
-        {"icon": "📅", "value": last_date, "label": "Last Assessment", "accent": "accent"},
-        {"icon": "💯", "value": avg_score, "label": "Avg Health Score", "accent": "success"},
-        {"icon": "⚡", "value": str(severity_counts.get("High", 0) + severity_counts.get("Critical", 0)),
+        {"icon": "", "value": str(total), "label": "Total Assessments", "accent": "primary"},
+        {"icon": "", "value": last_date, "label": "Last Assessment", "accent": "accent"},
+        {"icon": "", "value": avg_score, "label": "Avg Health Score", "accent": "success"},
+        {"icon": "", "value": str(severity_counts.get("High", 0) + severity_counts.get("Critical", 0)),
          "label": "High Severity", "accent": "danger"},
     ])
 
@@ -73,11 +73,11 @@ def render_dashboard() -> None:
 
         qa_col1, qa_col2 = st.columns(2)
         with qa_col1:
-            if st.button("🩺  Start New Assessment", use_container_width=True, key="dash_new_assessment"):
+            if st.button("Start New Assessment", use_container_width=True, key="dash_new_assessment", type="primary"):
                 st.session_state["current_page"] = "assessment"
                 st.rerun()
         with qa_col2:
-            if st.button("📄  View Reports", use_container_width=True, key="dash_view_reports"):
+            if st.button("View Reports", use_container_width=True, key="dash_view_reports"):
                 st.session_state["current_page"] = "reports"
                 st.rerun()
 
@@ -95,7 +95,7 @@ def render_dashboard() -> None:
                 title="Recent Activity",
                 content="""
                 <div style="text-align:center;padding:2rem 0;">
-                    <div style="font-size:3rem;margin-bottom:0.8rem;">🔍</div>
+                    <div style="font-size:3rem;margin-bottom:0.8rem;color:var(--text-muted);">•</div>
                     <p style="color:var(--text-muted);font-size:0.95rem;">No assessments yet.<br>
                     Start your first health assessment to see results here.</p>
                 </div>
@@ -116,7 +116,7 @@ def render_dashboard() -> None:
 
         # Health tips
         glass_card(
-            title="💡 Health Tip",
+            title="Health Tip",
             content="""
             <p style="color:var(--text-secondary);font-size:0.88rem;line-height:1.6;">
                 Regular health check-ups help catch potential issues early.

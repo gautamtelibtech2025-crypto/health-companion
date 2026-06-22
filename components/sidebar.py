@@ -1,83 +1,71 @@
 """
-HealthAI Pro — Sidebar Navigation Component
+HealthAI Pro — Top Navigation Component
 
-Prominent sidebar with 3D raised nav buttons and all options visible.
+Horizontal navigation header with flat outline nav buttons.
 """
 
 from __future__ import annotations
 
 import streamlit as st
+import textwrap
 
-from config.settings import APP_NAME, APP_VERSION, NAV_ITEMS, DISCLAIMER
+from config.settings import APP_NAME, APP_VERSION, NAV_ITEMS
 
 
 def render_sidebar() -> str:
-    """Render the sidebar navigation and return the selected page key."""
-    with st.sidebar:
-        # ── Branding ──────────────────────────────────────────────
+    """Render horizontal navigation at the top of the page."""
+    col_brand, col_nav = st.columns([1, 2])
+
+    with col_brand:
         st.markdown(
-            f"""
-            <div style="padding:0.6rem 0 1rem 0;text-align:left;">
-                <div style="font-size:2.2rem;margin-bottom:0.15rem;">🏥</div>
-                <h1 style="margin:0;">{APP_NAME}</h1>
-                <p style="margin:0;">v{APP_VERSION} · AI Health Assistant</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        # Section heading
-        st.markdown(
-            '<div style="font-size:0.72rem;color:var(--text-muted);font-weight:700;'
-            'text-transform:uppercase;letter-spacing:0.1em;margin:1rem 0 0.7rem 0;'
-            'padding-bottom:0.4rem;border-bottom:2px solid rgba(22,163,74,0.12);">'
-            '🧭 Navigation</div>',
-            unsafe_allow_html=True,
-        )
-
-        # ── Navigation Items ──────────────────────────────────────
-        current = st.session_state.get("current_page", "dashboard")
-
-        for item in NAV_ITEMS:
-            key = item["key"]
-            label = f"{item['icon']}  {item['label']}"
-
-            if key == current:
-                # Active page → pressed/sunken 3D look + green accent
-                st.markdown(
-                    f"""
-                    <div style="
-                        background: var(--bg-canvas);
-                        border-radius: 16px;
-                        padding: 0.85rem 1.15rem;
-                        margin-bottom: 10px;
-                        box-shadow: var(--shadow-pressed);
-                        border-left: 3px solid var(--accent);
-                    ">
-                        <span style="font-weight:700;color:var(--accent);font-size:0.95rem;">
-                            {label}
-                        </span>
+            textwrap.dedent(
+                f"""
+                <div style="display:flex;align-items:center;gap:0.65rem;padding:0.4rem 0;">
+                    <span style="width:0.9rem;height:0.9rem;border-radius:999px;background:var(--accent);display:inline-block;"></span>
+                    <div>
+                        <h1 style="margin:0;font-size:1.35rem;font-weight:700;color:var(--text-primary);line-height:1.1;letter-spacing:-0.02em;">{APP_NAME}</h1>
+                        <p style="margin:0;font-size:0.78rem;font-weight:500;color:var(--text-muted);line-height:1;">v{APP_VERSION} · simple health notes</p>
                     </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
-            else:
-                # Inactive → 3D raised button (CSS handles hover/active)
-                if st.button(label, key=f"nav_{key}", use_container_width=True):
-                    st.session_state["current_page"] = key
-                    st.rerun()
-
-        # ── Bottom ────────────────────────────────────────────────
-        st.markdown("---")
-        st.markdown(
-            """
-            <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.55;">
-                ⚕️ <strong>Disclaimer</strong>: AI-generated health info for
-                educational purposes only. Not a substitute for professional
-                medical advice.
-            </div>
-            """,
+                </div>
+                """
+            ),
             unsafe_allow_html=True,
         )
+
+    with col_nav:
+        current = st.session_state.get("current_page", "dashboard")
+        # Layout columns for buttons
+        nav_cols = st.columns(len(NAV_ITEMS))
+        for idx, item in enumerate(NAV_ITEMS):
+            key = item["key"]
+            label = item["label"]
+            with nav_cols[idx]:
+                if key == current:
+                    st.markdown(
+                        textwrap.dedent(
+                            f"""
+                            <div style="
+                                background: rgba(35, 67, 106, 0.08);
+                                border-radius: 10px;
+                                border: 1px solid rgba(35, 67, 106, 0.24);
+                                padding: 0.6rem 0.35rem;
+                                text-align: center;
+                                margin-top: 0.2rem;
+                            ">
+                                <span style="font-weight:600;color:var(--accent);font-size:0.84rem;white-space:nowrap;">
+                                    {label}
+                                </span>
+                            </div>
+                            """
+                        ),
+                        unsafe_allow_html=True,
+                    )
+                else:
+                    if st.button(label, key=f"nav_{key}", use_container_width=True):
+                        st.session_state["current_page"] = key
+                        st.rerun()
+
+    # Render a clean separator below the navbar
+    st.markdown("<hr style='margin:0.45rem 0 1.2rem 0 !important;'>", unsafe_allow_html=True)
 
     return current

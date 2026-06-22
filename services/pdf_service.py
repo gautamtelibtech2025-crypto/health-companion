@@ -183,6 +183,24 @@ class PDFService:
                     story.append(Paragraph(f"  {desc}", styles["body_small"]))
             story.append(Spacer(1, 4 * mm))
 
+        # ── Prescription Advisory ─────────────────────────────────
+        prescription = analysis.get("prescription")
+        if prescription:
+            story.append(Paragraph("Prescription Advisory (AI-Generated Mockup)", styles["section_heading"]))
+            story.append(Spacer(1, 2 * mm))
+            notes = prescription.get("doctor_notes", "")
+            if notes:
+                story.append(Paragraph(f"<b>Notes:</b> {notes}", styles["body"]))
+                story.append(Spacer(1, 2 * mm))
+
+            meds = prescription.get("medications", [])
+            if meds:
+                story.append(_prescription_table(meds, styles))
+                story.append(Spacer(1, 2 * mm))
+
+            story.append(Paragraph("<i>⚠️ WARNING: This prescription mockup is AI-generated for informational purposes only. Consult a physician before starting any treatment.</i>", styles["body_small"]))
+            story.append(Spacer(1, 4 * mm))
+
         # ── Treatments ────────────────────────────────────────────
         treatments = analysis.get("commonly_used_treatments", [])
         if treatments:
@@ -386,6 +404,42 @@ def _assessment_table(rows: list[list[str]], sev_color: colors.HexColor, styles:
             ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
             ("LEFTPADDING", (0, 0), (-1, -1), 8),
             ("TEXTCOLOR", (1, 0), (1, 0), sev_color),
+        ])
+    )
+    return t
+
+
+def _prescription_table(medications: list[dict[str, Any]], styles: dict) -> Table:
+    """Build a styled table for advisory medications."""
+    headers = [
+        Paragraph("<b>Medicine Name</b>", styles["body"]),
+        Paragraph("<b>Dosage</b>", styles["body"]),
+        Paragraph("<b>Frequency</b>", styles["body"]),
+        Paragraph("<b>Duration</b>", styles["body"]),
+        Paragraph("<b>Instructions</b>", styles["body_small"]),
+    ]
+
+    data = [headers]
+    for m in medications:
+        data.append([
+            Paragraph(m.get("name", ""), styles["body"]),
+            Paragraph(m.get("dosage", ""), styles["body"]),
+            Paragraph(m.get("frequency", ""), styles["body"]),
+            Paragraph(m.get("duration", ""), styles["body"]),
+            Paragraph(m.get("instructions", ""), styles["body_small"]),
+        ])
+
+    t = Table(data, colWidths=["25%", "15%", "20%", "15%", "25%"])
+    t.setStyle(
+        TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), _BG_LIGHT),
+            ("BOX", (0, 0), (-1, -1), 0.5, _BORDER),
+            ("INNERGRID", (0, 0), (-1, -1), 0.3, _BORDER),
+            ("TOPPADDING", (0, 0), (-1, -1), 6),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+            ("LEFTPADDING", (0, 0), (-1, -1), 6),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ])
     )
     return t

@@ -7,6 +7,7 @@ Multi-step wizard for collecting patient health information.
 from __future__ import annotations
 
 import streamlit as st
+import textwrap
 
 from components.header import page_header
 from components.cards import glass_card
@@ -82,7 +83,7 @@ def render_assessment() -> None:
 
     with nav_cols[2]:
         if step < 5:
-            if st.button("Next →", key="wiz_next", use_container_width=True):
+            if st.button("Next →", key="wiz_next", use_container_width=True, type="primary"):
                 # Basic validation
                 valid, msg = _validate_step(step, data)
                 if valid:
@@ -91,7 +92,7 @@ def render_assessment() -> None:
                 else:
                     st.error(msg)
         elif step == 5:
-            if st.button("🧠 Analyze with AI", key="wiz_submit", use_container_width=True):
+            if st.button("🧠 Analyze with AI", key="wiz_submit", use_container_width=True, type="primary"):
                 st.session_state["current_page"] = "analysis"
                 st.session_state["run_analysis"] = True
                 st.rerun()
@@ -153,17 +154,19 @@ def _step_personal_info(data: dict) -> None:
         bmi = w / ((h / 100) ** 2)
         category, color = _bmi_category(bmi)
         st.markdown(
-            f"""
-            <div class="medical-input-sunken animate-in animate-in-2" style="text-align:center;padding:1rem;">
-                <span style="font-size:0.82rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">
-                    Body Mass Index
-                </span>
-                <div style="font-size:2rem;font-weight:800;color:{color};margin:0.3rem 0;">
-                    {bmi:.1f}
+            textwrap.dedent(
+                f"""
+                <div class="medical-input-sunken animate-in animate-in-2" style="text-align:center;padding:1rem;">
+                    <span style="font-size:0.82rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">
+                        Body Mass Index
+                    </span>
+                    <div style="font-size:2rem;font-weight:800;color:{color};margin:0.3rem 0;">
+                        {bmi:.1f}
+                    </div>
+                    <span style="font-size:0.85rem;color:{color};font-weight:600;">{category}</span>
                 </div>
-                <span style="font-size:0.85rem;color:{color};font-weight:600;">{category}</span>
-            </div>
-            """,
+                """
+            ),
             unsafe_allow_html=True,
         )
 
@@ -232,14 +235,16 @@ def _step_duration(data: dict) -> None:
         pain_label, pain_color, pain_emoji = "Very Severe", "#7F1D1D", "😭"
 
     st.markdown(
-        f"""
-        <div style="text-align:center;margin:0.5rem 0;">
-            <span style="font-size:2.5rem;">{pain_emoji}</span>
-            <div style="font-size:0.9rem;font-weight:600;color:{pain_color};margin-top:0.2rem;">
-                {pain_label} ({level}/10)
+        textwrap.dedent(
+            f"""
+            <div style="text-align:center;margin:0.5rem 0;">
+                <span style="font-size:2.5rem;">{pain_emoji}</span>
+                <div style="font-size:0.9rem;font-weight:600;color:{pain_color};margin-top:0.2rem;">
+                    {pain_label} ({level}/10)
+                </div>
             </div>
-        </div>
-        """,
+            """
+        ),
         unsafe_allow_html=True,
     )
 
@@ -298,23 +303,25 @@ def _step_review(data: dict) -> None:
     bmi_str = f"{w / ((h / 100) ** 2):.1f}" if h > 0 and w > 0 else "N/A"
 
     st.markdown(
-        f"""
-        <div class="medical-input-sunken">
-            <h4 style="margin:0 0 0.6rem 0;color:var(--accent);">👤 Personal Info</h4>
-            <table style="width:100%;font-size:0.88rem;color:var(--text-secondary);">
-                <tr><td style="padding:0.3rem 0;font-weight:600;width:40%;">Age</td>
-                    <td>{data.get('age', 'N/A')}</td></tr>
-                <tr><td style="padding:0.3rem 0;font-weight:600;">Gender</td>
-                    <td>{data.get('gender', 'N/A')}</td></tr>
-                <tr><td style="padding:0.3rem 0;font-weight:600;">Height</td>
-                    <td>{h} cm</td></tr>
-                <tr><td style="padding:0.3rem 0;font-weight:600;">Weight</td>
-                    <td>{w} kg</td></tr>
-                <tr><td style="padding:0.3rem 0;font-weight:600;">BMI</td>
-                    <td>{bmi_str}</td></tr>
-            </table>
-        </div>
-        """,
+        textwrap.dedent(
+            f"""
+            <div class="medical-input-sunken">
+                <h4 style="margin:0 0 0.6rem 0;color:var(--accent);">👤 Personal Info</h4>
+                <table style="width:100%;font-size:0.88rem;color:var(--text-secondary);">
+                    <tr><td style="padding:0.3rem 0;font-weight:600;width:40%;">Age</td>
+                        <td>{data.get('age', 'N/A')}</td></tr>
+                    <tr><td style="padding:0.3rem 0;font-weight:600;">Gender</td>
+                        <td>{data.get('gender', 'N/A')}</td></tr>
+                    <tr><td style="padding:0.3rem 0;font-weight:600;">Height</td>
+                        <td>{h} cm</td></tr>
+                    <tr><td style="padding:0.3rem 0;font-weight:600;">Weight</td>
+                        <td>{w} kg</td></tr>
+                    <tr><td style="padding:0.3rem 0;font-weight:600;">BMI</td>
+                        <td>{bmi_str}</td></tr>
+                </table>
+            </div>
+            """
+        ),
         unsafe_allow_html=True,
     )
 
@@ -325,16 +332,18 @@ def _step_review(data: dict) -> None:
         all_symptoms += f" | Other: {other}"
 
     st.markdown(
-        f"""
-        <div class="medical-input-sunken">
-            <h4 style="margin:0 0 0.6rem 0;color:var(--accent);">🤒 Symptoms</h4>
-            <p style="font-size:0.88rem;color:var(--text-secondary);margin:0;">{all_symptoms}</p>
-            <p style="font-size:0.88rem;color:var(--text-secondary);margin:0.3rem 0 0 0;">
-                <strong>Duration:</strong> {data.get('duration', 'N/A')} &nbsp;|&nbsp;
-                <strong>Pain Level:</strong> {data.get('pain_level', 'N/A')}/10
-            </p>
-        </div>
-        """,
+        textwrap.dedent(
+            f"""
+            <div class="medical-input-sunken">
+                <h4 style="margin:0 0 0.6rem 0;color:var(--accent);">🤒 Symptoms</h4>
+                <p style="font-size:0.88rem;color:var(--text-secondary);margin:0;">{all_symptoms}</p>
+                <p style="font-size:0.88rem;color:var(--text-secondary);margin:0.3rem 0 0 0;">
+                    <strong>Duration:</strong> {data.get('duration', 'N/A')} &nbsp;|&nbsp;
+                    <strong>Pain Level:</strong> {data.get('pain_level', 'N/A')}/10
+                </p>
+            </div>
+            """
+        ),
         unsafe_allow_html=True,
     )
 
@@ -342,16 +351,18 @@ def _step_review(data: dict) -> None:
     meds = data.get("medications", "None") or "None"
 
     st.markdown(
-        f"""
-        <div class="medical-input-sunken">
-            <h4 style="margin:0 0 0.6rem 0;color:var(--accent);">📋 Medical History</h4>
-            <p style="font-size:0.88rem;color:var(--text-secondary);margin:0;">
-                <strong>Conditions:</strong> {conditions}<br>
-                <strong>Medications:</strong> {meds}<br>
-                <strong>Allergies:</strong> {data.get('allergies', 'None') or 'None'}
-            </p>
-        </div>
-        """,
+        textwrap.dedent(
+            f"""
+            <div class="medical-input-sunken">
+                <h4 style="margin:0 0 0.6rem 0;color:var(--accent);">📋 Medical History</h4>
+                <p style="font-size:0.88rem;color:var(--text-secondary);margin:0;">
+                    <strong>Conditions:</strong> {conditions}<br>
+                    <strong>Medications:</strong> {meds}<br>
+                    <strong>Allergies:</strong> {data.get('allergies', 'None') or 'None'}
+                </p>
+            </div>
+            """
+        ),
         unsafe_allow_html=True,
     )
 

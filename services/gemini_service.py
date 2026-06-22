@@ -142,9 +142,21 @@ Provide your analysis in the following JSON format ONLY. Do not include any text
         {{
             "name": "<condition name>",
             "likelihood": "Low | Moderate | High",
-            "description": "<brief description of this condition>"
+            "description": "<detailed explanation of this condition in simple, clear, and very easy-to-understand English for a layperson. Avoid complex medical jargon, or define it clearly.>"
         }}
     ],
+    "prescription": {{
+        "doctor_notes": "<general medical notes or clinical advice from an advisory doctor in simple English>",
+        "medications": [
+            {{
+                "name": "<medicine name, e.g. Paracetamol or Ibuprofen>",
+                "dosage": "<dosage amount, e.g. 500 mg or 1 pill>",
+                "frequency": "<when and how to take it, e.g. Twice daily after meals, or Once at night before sleeping>",
+                "duration": "<how many days, e.g. 5 days, or As needed>",
+                "instructions": "<special instructions, e.g. take with water, avoid alcohol, do not crush>"
+            }}
+        ]
+    }},
     "general_information": "<paragraph explaining the symptoms in simple terms>",
     "recommended_actions": [
         "<action 1>",
@@ -179,8 +191,8 @@ def _parse_response(text: str) -> dict[str, Any]:
     The model may wrap JSON in markdown code fences — this handles that.
     """
     # Try to extract JSON from code fences first
-    json_match = re.search(r"```(?:json)?\s*\n?(.*?)\n?```", text, re.DOTALL)
-    json_str = json_match.group(1).strip() if json_match else text.strip()
+    json_match = re.search(r"```(json)?\s*\n?(.*?)\n?```", text, re.DOTALL)
+    json_str = json_match.group(2).strip() if json_match else text.strip()
 
     try:
         return json.loads(json_str)
@@ -200,6 +212,10 @@ def _parse_response(text: str) -> dict[str, Any]:
             "summary": "The AI analysis could not be fully parsed. Please review the raw output below.",
             "raw_response": text,
             "possible_conditions": [],
+            "prescription": {
+                "doctor_notes": "Unable to parse prescription details. Please consult a qualified doctor.",
+                "medications": []
+            },
             "general_information": text,
             "recommended_actions": ["Consult a healthcare professional for accurate assessment."],
             "commonly_used_treatments": [],

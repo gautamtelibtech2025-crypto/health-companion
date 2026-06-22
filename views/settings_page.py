@@ -14,6 +14,7 @@ from config.settings import (
     APP_DESCRIPTION,
     APP_NAME,
     APP_VERSION,
+    ENV_FILE,
     GEMINI_MODEL,
     get_gemini_api_key,
 )
@@ -36,7 +37,7 @@ def render_settings() -> None:
         content="""
         <p style="color:#475569;font-size:0.88rem;line-height:1.6;">
             Enter your Google Gemini API key to enable AI analysis.
-            The key is stored in your session only and is never persisted to disk.
+            The key can be saved locally in <code>.env</code> so you do not need to re-enter it each time.
             You can also set the <code>GEMINI_API_KEY</code> environment variable.
         </p>
         """,
@@ -50,7 +51,7 @@ def render_settings() -> None:
             """
             <div class="neu-card" style="border-left:3px solid #22C55E;padding:0.8rem 1rem;">
                 <span style="font-size:0.85rem;color:#22C55E;font-weight:600;">
-                    ✅ API key detected from environment variable <code>GEMINI_API_KEY</code>
+                    ✅ API key detected from local <code>.env</code> or the <code>GEMINI_API_KEY</code> environment variable
                 </span>
             </div>
             """,
@@ -96,10 +97,11 @@ def render_settings() -> None:
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("💾  Save API Key", key="save_key", use_container_width=True):
+        if st.button("💾  Save API Key", key="save_key", use_container_width=True, type="primary"):
             if api_key.strip():
                 st.session_state["manual_api_key"] = api_key.strip()
                 GeminiService.configure(api_key.strip())
+                ENV_FILE.write_text(f"GEMINI_API_KEY={api_key.strip()}\n", encoding="utf-8")
                 st.success("✅ API key saved and configured!")
             else:
                 st.warning("Please enter a valid API key.")
